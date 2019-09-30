@@ -8,13 +8,12 @@ import org.apache.cordova.PluginResult;
 import org.apache.cordova.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
-import android.content.res.Resources;
 
+import android.content.res.Resources;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 
@@ -22,14 +21,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.Display;
 import android.graphics.Point;
 import android.os.Build;
-import android.widget.FrameLayout;
 
-public class CDVIonicKeyboard extends CordovaPlugin {
+public class IonicKeyboard2 extends CordovaPlugin {
     private OnGlobalLayoutListener list;
     private View rootView;
-    private View mChildOfContent;
-    private int usableHeightPrevious;
-    private FrameLayout.LayoutParams frameLayoutParams;
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -72,16 +67,11 @@ public class CDVIonicKeyboard extends CordovaPlugin {
                     final float density = dm.density;
 
                     //http://stackoverflow.com/a/4737265/1091751 detect if keyboard is showing
-                    FrameLayout content = (FrameLayout) cordova.getActivity().findViewById(android.R.id.content);
                     rootView = cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getRootView();
                     list = new OnGlobalLayoutListener() {
                         int previousHeightDiff = 0;
                         @Override
                         public void onGlobalLayout() {
-                            boolean resize = preferences.getBoolean("resizeOnFullScreen", false);
-                            if (resize) {
-                                possiblyResizeChildOfContent();
-                            }
                             Rect r = new Rect();
                             //r will be populated with the coordinates of your view that area still visible.
                             rootView.getWindowVisibleDisplayFrame(r);
@@ -97,23 +87,24 @@ public class CDVIonicKeyboard extends CordovaPlugin {
                             int screenHeight;
 
                             if (Build.VERSION.SDK_INT >= 21) {
-                                /*Display display = cordova.getActivity().getWindowManager().getDefaultDisplay();
-                                Point size = new Point();
-                                display.getSize(size);
-                                screenHeight = size.y;*/
+                                //Display display = cordova.getActivity().getWindowManager().getDefaultDisplay();
+                                //Point size = new Point();
+                                //display.getSize(size);
+                                //screenHeight = size.y;
                                 screenHeight = cordova.getActivity().getWindow().getDecorView().getRootView().getHeight();
                             } else {
                                 screenHeight = rootViewHeight;
                             }
                             
+                            //获取NavigationBar的高度
                             Resources resources = cordova.getActivity().getResources();
                             int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android"); 
                             int navbar = resources.getDimensionPixelSize(resourceId);
-                            
+                            //获取status_bar_height的高度
                             int status_resourceId = resources.getIdentifier("status_bar_height", "dimen", "android"); 
                             int statusbar = resources.getDimensionPixelSize(status_resourceId);
                             
-                            int heightDiff = screenHeight - resultBottom;
+                            int heightDiff = screenHeight - resultBottom;// + navbar + statusbar;
 
                             int pixelHeightDiff = (int)(heightDiff / density);
                             if (pixelHeightDiff > 100 && pixelHeightDiff != previousHeightDiff) { // if more than 100 pixels, its probably a keyboard...
@@ -129,33 +120,12 @@ public class CDVIonicKeyboard extends CordovaPlugin {
                                 callbackContext.sendPluginResult(result);
                             }
                             previousHeightDiff = pixelHeightDiff;
-                        }
-
-                        private void possiblyResizeChildOfContent() {
-                            int usableHeightNow = computeUsableHeight();
-                            if (usableHeightNow != usableHeightPrevious) {
-                                int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight();
-                                int heightDifference = usableHeightSansKeyboard - usableHeightNow;
-                                if (heightDifference > (usableHeightSansKeyboard/4)) {
-                                    frameLayoutParams.height = usableHeightSansKeyboard - heightDifference;
-                                } else {
-                                    frameLayoutParams.height = usableHeightSansKeyboard;
-                                }
-                                mChildOfContent.requestLayout();
-                                usableHeightPrevious = usableHeightNow;
-                            }
-                        }
-
-                        private int computeUsableHeight() {
-                            Rect r = new Rect();
-                            mChildOfContent.getWindowVisibleDisplayFrame(r);
-                            return (r.bottom - r.top);
-                        }
+                         }
                     };
 
-                    mChildOfContent = content.getChildAt(0);
                     rootView.getViewTreeObserver().addOnGlobalLayoutListener(list);
-                    frameLayoutParams = (FrameLayout.LayoutParams) mChildOfContent.getLayoutParams();
+
+
                     PluginResult dataResult = new PluginResult(PluginResult.Status.OK);
                     dataResult.setKeepCallback(true);
                     callbackContext.sendPluginResult(dataResult);
