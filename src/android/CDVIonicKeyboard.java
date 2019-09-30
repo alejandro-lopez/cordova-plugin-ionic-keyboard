@@ -96,11 +96,11 @@ public class IonicKeyboard2 extends CordovaPlugin {
                                 screenHeight = rootViewHeight;
                             }
                             
-                            //获取NavigationBar的高度
+                            
                             Resources resources = cordova.getActivity().getResources();
                             int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android"); 
                             int navbar = resources.getDimensionPixelSize(resourceId);
-                            //获取status_bar_height的高度
+                            
                             int status_resourceId = resources.getIdentifier("status_bar_height", "dimen", "android"); 
                             int statusbar = resources.getDimensionPixelSize(status_resourceId);
                             
