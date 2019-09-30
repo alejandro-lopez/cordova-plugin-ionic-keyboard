@@ -73,7 +73,7 @@ public class CDVIonicKeyboard extends CordovaPlugin {
 
                     //http://stackoverflow.com/a/4737265/1091751 detect if keyboard is showing
                     FrameLayout content = (FrameLayout) cordova.getActivity().findViewById(android.R.id.content);
-                    rootView = content.getRootView();
+                    rootView = cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getRootView();
                     list = new OnGlobalLayoutListener() {
                         int previousHeightDiff = 0;
                         @Override
@@ -105,7 +105,14 @@ public class CDVIonicKeyboard extends CordovaPlugin {
                             } else {
                                 screenHeight = rootViewHeight;
                             }
-
+                            
+                            Resources resources = cordova.getActivity().getResources();
+                            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android"); 
+                            int navbar = resources.getDimensionPixelSize(resourceId);
+                            
+                            int status_resourceId = resources.getIdentifier("status_bar_height", "dimen", "android"); 
+                            int statusbar = resources.getDimensionPixelSize(status_resourceId);
+                            
                             int heightDiff = screenHeight - resultBottom;
 
                             int pixelHeightDiff = (int)(heightDiff / density);
