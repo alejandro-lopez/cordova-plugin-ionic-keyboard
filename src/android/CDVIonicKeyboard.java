@@ -8,6 +8,7 @@ import org.apache.cordova.PluginResult;
 import org.apache.cordova.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
+import android.content.res.Resources;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -96,10 +97,11 @@ public class CDVIonicKeyboard extends CordovaPlugin {
                             int screenHeight;
 
                             if (Build.VERSION.SDK_INT >= 21) {
-                                Display display = cordova.getActivity().getWindowManager().getDefaultDisplay();
+                                /*Display display = cordova.getActivity().getWindowManager().getDefaultDisplay();
                                 Point size = new Point();
                                 display.getSize(size);
-                                screenHeight = size.y;
+                                screenHeight = size.y;*/
+                                screenHeight = cordova.getActivity().getWindow().getDecorView().getRootView().getHeight();
                             } else {
                                 screenHeight = rootViewHeight;
                             }
