@@ -22,7 +22,7 @@ import android.view.Display;
 import android.graphics.Point;
 import android.os.Build;
 
-public class IonicKeyboard2 extends CordovaPlugin {
+public class IonicKeyboard extends CordovaPlugin {
     private OnGlobalLayoutListener list;
     private View rootView;
 
