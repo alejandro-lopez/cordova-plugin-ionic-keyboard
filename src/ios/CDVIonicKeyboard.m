@@ -158,7 +158,7 @@ NSString* UITraitsClassString;
 
     if (self.isWK) {
         double duration = [[note.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        [self setKeyboardHeight:height delay:duration];
+        [self setKeyboardHeight:height delay:duration/2.0];
         [self resetScrollView];
     }
     
